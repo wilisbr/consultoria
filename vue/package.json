@@ -13,7 +13,8 @@
     "core-js": "^3.8.3",
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
-    "vue": "^3.2.13",
+    "tabulator-tables": "^6.3.0",
+    "vue": "^3.5.13",
     "vue-cookies": "^1.8.4",
     "vue-router": "^4.0.13",
     "vuetify": "^3.7.4"
