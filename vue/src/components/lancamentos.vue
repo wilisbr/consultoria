@@ -7,15 +7,6 @@
         {{ DRE.ano }}-{{ DRE.mes }}
       </option>
     </select>
-    <p>DREs</p>
-    {{DREs}}
-    <br>
-    <p> Lancamentos: </p>
-    {{lancamentos}}
-    <br> <p>Tipo Lancamentos:</p>
-    {{tipo_lancamento_dre}}
-
-    <hr>
 
     <div ref="tabulator"></div>
     <button @click="addLancamento">Adicionar Lançamento</button>
@@ -82,11 +73,11 @@
                 },
             ],
             //cellEdited: (cell) => this.updateLancamento(cell),
-            //});
-            cellEdited: (cell) => {
-                console.log("Célula editada:", cell);
-                //this.updateLancamento(cell);
-            }
+            });
+
+            this.tabulator.on("cellEdited", (cell) => {
+                console.log("Evento cellEdited disparado:", cell);
+                this.updateLancamento(cell);
             });
             
 
