@@ -9,7 +9,7 @@
     </select>
     <button @click="openPopup">Criar Nova DRE</button>
     <div ref="tabulator"></div>
-    <button @click="addLancamento">Adicionar Lançamento</button>
+
     <!-- Popup -->
     <div v-if="showPopup" class="popup-overlay">
       <div class="popup-content">
@@ -44,6 +44,7 @@
               lancamentos: null,
               idDREMensal: null,
               tipo_lancamento_dre: null,
+              select_tipo_lancamento: null,
               apiUrlDRE: "http://localhost:8000/api/dre_mensal/", // URL para criar DRE
               apiUrlLancamentos: "http://localhost:8000/api/lancamento_dre/", // Substitua pelo endpoint real
               tabulator: null,
@@ -56,20 +57,39 @@
               },
             }
         },
-        mounted() {
-            this.fetch_DREs(this.$route.params.id);
-            this.fetch_tipo_lancamento();
+        async mounted() {
+            await this.fetch_DREs(this.$route.params.id);
+            await this.fetch_tipo_lancamento();
+
+            // Garante que os dados estão disponíveis antes de configurar o Tabulator
+            if (!this.tipo_lancamento_dre || this.tipo_lancamento_dre.length === 0) {
+              console.error("Nenhum tipo de lançamento encontrado.");
+              return;
+            }
 
             this.tabulator = new Tabulator(this.$refs.tabulator, {
             layout: "fitColumns",
             placeholder: "Nenhum lançamento disponível",
             columns: [
-                { title: "ID", field: "id", width: 50, headerSort: false },
                 { 
-                title: "Tipo", 
-                field: "tipo", 
-                editor: "input", // Pode ser ajustado para dropdown se necessário
-                headerSort: false 
+
+                  title:"Tipo", field:"tipo", editor:"list", editorParams:{
+                      values:this.select_tipo_lancamento,
+                  },
+
+                  formatter: function(cell) {
+                      if (!cell.getValue() || !this.select_tipo_lancamento ){
+                        return "Não definido"
+                      }
+                      return this.select_tipo_lancamento[cell.getValue()];  // Exibindo o valor formatado
+                  }.bind(this),
+                  validator: function(value) {
+                        if (value === null || value === "") {
+                            return [false, "O tipo não pode ser vazio"];
+                        }
+                        return true;
+                  },
+
                 },
                 { 
                 title: "Valor (R$)", 
@@ -77,12 +97,6 @@
                 editor: "number", 
                 formatter: "money", 
                 formatterParams: { symbol: "R$", precision: 2 }, 
-                headerSort: false 
-                },
-                { 
-                title: "DRE Mensal", 
-                field: "DRE_mensal", 
-                editor: "input", // Pode ser ajustado para dropdown se necessário
                 headerSort: false 
                 },
                 {
@@ -95,12 +109,22 @@
                     }
                 },
             ],
-            //cellEdited: (cell) => this.updateLancamento(cell),
             });
 
-            this.tabulator.on("cellEdited", (cell) => {
+
+            /*this.tabulator.on("cellEdited", (cell) => {
                 console.log("Evento cellEdited disparado:", cell);
                 this.updateLancamento(cell);
+            });*/
+            
+            this.tabulator.on("cellEdited", (cell) => {
+                const value = cell.getValue();
+                if (value === null || value === "") {
+                    alert("O valor não pode ser vazio.");
+                    cell.restoreOldValue();
+                } else {
+                    this.updateLancamento(cell);
+                }
             });
             
 
@@ -113,28 +137,24 @@
             },
             'idDREMensal'(newDREMensal) {
                 this.fetch_lancamentos(newDREMensal);
-                //console.log(this.lancamentos)
-                
-            }
+                //console.log(this.lancamentos)   
+            },
         },
         methods: {
             async fetch_DREs(id) {
             await axios.get(`http://localhost:8000/api/dre_mensal/?empresa__id=${id}`)
                 .then(response => {
                 this.DREs = response.data;
-                //console.log (this.DREs)
                 })
                 .catch(error => {
                 console.error('Error fetching empresa:', error);
                 });
             },
             async fetch_lancamentos(id_DREMensal) {
-            //await axios.get(`http://localhost:8000/api/lancamento_dre/?DRE_mensal=${id_DREMensal}`)
             await axios.get(`${this.apiUrlLancamentos}?DRE_mensal=${id_DREMensal}`)
                 .then(response => {
                 this.lancamentos = response.data;
                 this.tabulator.setData(this.lancamentos);
-                console.log (this.lancamentos)
                 })
                 .catch(error => {
                 console.error('Error fetching empresa:', error);
@@ -162,7 +182,10 @@
                 await axios.get(`http://localhost:8000/api/tipo_lancamento_dre`)
                 .then(response => {
                 this.tipo_lancamento_dre = response.data;
-                //console.log (this.DREs)
+                this.select_tipo_lancamento=response.data.reduce((acc, item) => {
+                  acc[item.id] = item.descricao;
+                  return acc;
+                }, {});
                 })
                 .catch(error => {
                 console.error('Error fetching empresa:', error);
