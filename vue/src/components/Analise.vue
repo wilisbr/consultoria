@@ -18,17 +18,15 @@
       </div>
 
       <div class="navbar-end">
-
         <div class="navbar-menu" id="navbar-menu" v-bind:class="{'is-active': showMobileMenu }">
-      
-          <div v-if="idEmpresa" class="navbar-item">
+           <div  class="navbar-item">
             <div class="buttons">
                 <router-link :to="{ name: 'informacoesGerais', params: { id: this.idEmpresa} }" > Informações  </router-link>
-                <router-link :to="{ name: 'lancamentos', params: { id: this.idEmpresa} }" > Lançamentos  </router-link>
+                <router-link :to="{ name: 'lancamentos', params: { id: this.idEmpresa} }" v-if="idEmpresa"> Lançamentos  </router-link>
+                <router-link :to="{ name: 'tiposLancamentos', params: {} }" > Configurações  </router-link>
             </div>
           </div>
         </div>
-
       </div>
     </nav>
 
