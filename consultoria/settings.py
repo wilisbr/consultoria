@@ -150,7 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # Add your frontend URL here
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://docker1.vps.webdock.cloud"
 ]
 
 # To allow specific headers and methods

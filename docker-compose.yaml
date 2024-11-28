@@ -8,6 +8,8 @@ services:
     container_name: vue_app
     ports:
       - "80:80"  # Exponha o Nginx na porta 8080
+    networks:
+      - app_network  # Especifica a rede para o Vue
 
   django:
     build:
@@ -22,6 +24,8 @@ services:
       - staticfiles:/app/staticfiles  # Verifique se você tem esse volume
     depends_on:
       - mysql  # Garante que o Django inicie após o MySQL
+    networks:
+      - app_network  # Especifica a rede para o Django
 
   mysql:
     image: mysql:8.0  # Agora usando a versão 8.0 do MySQL
@@ -35,7 +39,12 @@ services:
       - "3306:3306"  # Expõe a porta do MySQL
     volumes:
       - mysql_data:/var/lib/mysql  # Persistência dos dados do MySQL
+    networks:
+      - app_network  # Especifica a rede para o MySQL
 
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
   staticfiles:  # Declaração do volume nomeado "staticfiles"
