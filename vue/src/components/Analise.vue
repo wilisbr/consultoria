@@ -77,5 +77,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'node_modules/bulma/bulma.scss';
+//@import 'node_modules/bulma/bulma.scss';
+@import '~bulma/bulma';
 </style>
