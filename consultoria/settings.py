@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-0fa!d2pihn&ds@1)oa-+!@)qb1@itdhqq^4)i88$p^&0^#^d1+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -152,7 +152,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # Add your frontend URL here
     "http://127.0.0.1:8000",
     "http://docker1.vps.webdock.cloud",
-    "*"
 ]
 
 # To allow specific headers and methods
