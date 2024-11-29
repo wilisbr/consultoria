@@ -26,7 +26,13 @@
     </div>
     <!-- Tabela Tabulator -->
     <div ref="tabulator"></div>
-    <button @click="addLancamento">Adicionar Lançamento</button>
+    <select v-if="idDREMensal" v-model="selectTipoLancamento" @change="enableAddLancamento">
+      <option disabled value="">Adicionar</option>
+      <option v-for="tipo in tipo_lancamento_dre" :key="tipo.id" :value="tipo.id">
+        {{ tipo.descricao }}
+      </option>
+    </select>
+    <button @click="addLancamento" v-if="selectTipoLancamento && idDREMensal">Adicionar</button>
 
   </div>
 </template>
@@ -43,6 +49,7 @@
               empresa:this.$route.params.id,
               DREs: [],
               lancamentos: null,
+              selectTipoLancamento: '', // Modelo para o tipo de lançamento selecionado
               idDREMensal: null,
               tipo_lancamento_dre: null,
               select_tipo_lancamento: null,
@@ -61,6 +68,8 @@
         async mounted() {
             await this.fetch_DREs(this.$route.params.id);
             await this.fetch_tipo_lancamento();
+            console.log("Tipos de lançamentos:")
+            console.log(this.tipo_lancamento_dre)
 
             // Garante que os dados estão disponíveis antes de configurar o Tabulator
             if (!this.tipo_lancamento_dre || this.tipo_lancamento_dre.length === 0) {
@@ -162,7 +171,9 @@
                 });
             },
             addLancamento() {
-                const newItem = { tipo: 1, valor: 0.0, DRE_mensal: this.idDREMensal };
+                console.log('Adicionando lancamento')
+                console.log(this.tipo_lancamento_dre)
+                const newItem = { tipo: this.selectTipoLancamento, valor: 0.0, DRE_mensal: this.idDREMensal };
                 axios.post(this.apiUrlLancamentos, newItem).then((response) => {
                     this.tabulator.addRow(response.data);
                 });
