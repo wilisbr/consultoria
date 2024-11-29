@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 export default {
+  inject: ['apiUrl'],
   data() {
     return {
       empresas: [],
       enquadramentosTributarios: [],
-      apiUrl: `http://${window.location.hostname}:8000/api`
     };
   },
   methods: {

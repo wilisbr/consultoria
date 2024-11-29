@@ -14,11 +14,12 @@ import "tabulator-tables/dist/css/tabulator.min.css";
 
 export default {
   name: 'Tipos_Lancamentos',
+  inject: ['apiUrl'],
   data() {
     return {
       tipos_lancamentos_dre: null,
       tabulator: null,
-      apiUrlTipoLancamentos: "http://localhost:8000/api/tipo_lancamento_dre/"
+      apiUrlTipoLancamentos: `${this.apiUrl}/tipo_lancamento_dre/`
     }
   },
   computed: {
