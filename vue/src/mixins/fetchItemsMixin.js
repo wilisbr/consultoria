@@ -4,15 +4,16 @@ export default {
   data() {
     return {
       empresas: [],
-      enquadramentosTributarios: []
+      enquadramentosTributarios: [],
+      apiUrl: `http://${window.location.hostname}:8000/api`
     };
   },
   methods: {
 
     
     async fetchEmpresas(id = null) {
-      const url = id ? `http://localhost:8000/api/empresa/${id}/` : 'http://localhost:8000/api/empresa/';
-
+      const url = id ? `${this.apiUrl}/empresa/${id}/` : `${this.apiUrl}/empresa/`;
+      console.log(url)
       await axios.get(url, {
         headers: {
           'X-CSRFToken': this.$cookies.get('csrftoken')
@@ -29,7 +30,7 @@ export default {
     },
 
     fetchEnquadramentosTributarios() {
-      axios.get(`http://localhost:8000/api/enquadramento_tributario/`)
+      axios.get(`${this.apiUrl}/enquadramento_tributario/`)
         .then(response => {
           this.enquadramentosTributarios = response.data;
         })
