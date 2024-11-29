@@ -37,6 +37,7 @@
     import axios from 'axios'
     export default {
         name: 'lancamentosCrud',
+        inject: ['apiUrl'],
         data() {
             return {
               empresa:this.$route.params.id,
@@ -45,8 +46,8 @@
               idDREMensal: null,
               tipo_lancamento_dre: null,
               select_tipo_lancamento: null,
-              apiUrlDRE: "http://localhost:8000/api/dre_mensal/", // URL para criar DRE
-              apiUrlLancamentos: "http://localhost:8000/api/lancamento_dre/", // Substitua pelo endpoint real
+              apiUrlDRE: `${this.apiUrl}/dre_mensal/`, // URL para criar DRE
+              apiUrlLancamentos: `${this.apiUrl}/lancamento_dre/`, // Substitua pelo endpoint real
               tabulator: null,
               showPopup: false, // Controle de exibição do popup
               newDRE: {

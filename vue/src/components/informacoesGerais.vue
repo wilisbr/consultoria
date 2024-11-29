@@ -117,6 +117,7 @@ import axios from 'axios'
 
 export default {
   name: 'informacoesGerais',
+  inject: ['apiUrl'],
   data() {
     return {
       empresa: null
@@ -141,7 +142,7 @@ export default {
   },
    methods: {
     async fetchEmpresa(id) {
-      await axios.get(`http://localhost:8000/api/empresa/${id}/`)
+      await axios.get(`${this.apiUrl}/empresa/${id}/`)
         .then(response => {
           this.empresa = response.data;
         })
@@ -157,7 +158,7 @@ export default {
       }
     },
     createEmpresa() {
-      axios.post('http://localhost:8000/api/empresa/', this.empresa)
+      axios.post(`${this.apiUrl}/empresa/`, this.empresa)
         .then(response => {
           this.empresa = response.data;
           alert('Empresa criada com sucesso!');
@@ -168,7 +169,7 @@ export default {
         });
     },
     updateEmpresa() {
-      axios.put(`http://localhost:8000/api/empresa/${this.empresa.id}/`, this.empresa)
+      axios.put(`${this.apiUrl}/empresa/${this.empresa.id}/`, this.empresa)
         .then(response => {
           this.empresa = response.data;
           alert('Empresa atualizada com sucesso!');
@@ -179,7 +180,7 @@ export default {
     },
     handleDelete() {
       if (confirm('Tem certeza que deseja excluir esta empresa?')) {
-        axios.delete(`http://localhost:8000/api/empresa/${this.empresa.id}/`)
+        axios.delete(`${this.apiUrl}/empresa/${this.empresa.id}/`)
           .then(() => {
             this.resetForm();
             alert('Empresa excluída com sucesso!');

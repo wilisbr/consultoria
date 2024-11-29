@@ -40,13 +40,14 @@ import axios from "axios";
 
 export default {
   name: "lancamentosCrud",
+  inject: ['apiUrl'],
   data() {
     return {
       DREs: [], // Lista de DREs carregados do backend
       lancamentos: null, // Lançamentos da tabela
       idDREMensal: null, // DRE selecionada
-      apiUrlDRE: "http://localhost:8000/api/dre_mensal/", // URL para criar DRE
-      apiUrlLancamentos: "http://localhost:8000/api/lancamento_dre/", // URL para lançamentos
+      apiUrlDRE: `${this.apiUrl}/dre_mensal/`, // URL para criar DRE
+      apiUrlLancamentos: `${this.apiUrl}/lancamento_dre/`, // URL para lançamentos
       tabulator: null, // Referência ao Tabulator
       showPopup: false, // Controle de exibição do popup
       newDRE: {
