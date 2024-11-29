@@ -54,7 +54,8 @@ export default {
   data() {
     return {
       empresas: [],
-      idEmpresa: 0
+      idEmpresa: 0,
+      showMobileMenu: false 
     };
   },
   created() {
