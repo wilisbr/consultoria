@@ -23,6 +23,7 @@
             <div class="buttons">
                 <router-link :to="{ name: 'informacoesGerais', params: { id: this.idEmpresa} }" > Informações  </router-link>
                 <router-link :to="{ name: 'lancamentos', params: { id: this.idEmpresa} }" v-if="idEmpresa"> Lançamentos  </router-link>
+                <router-link :to="{ name: 'analiseAnual', params: {id: this.idEmpresa} }" v-if="idEmpresa"> Análise Anual </router-link>
                 <router-link :to="{ name: 'tiposLancamentos', params: {} }" > Configurações  </router-link>
             </div>
           </div>
@@ -67,8 +68,6 @@ export default {
   },
   watch: {
   idEmpresa(newVal, oldVal) {
-    console.log(newVal)
-    console.log(oldVal)
     if (newVal !== oldVal) {
       this.$router.push({ name: 'lancamentos', params: { id: newVal } });
     }

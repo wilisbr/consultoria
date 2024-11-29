@@ -68,8 +68,6 @@
         async mounted() {
             await this.fetch_DREs(this.$route.params.id);
             await this.fetch_tipo_lancamento();
-            console.log("Tipos de lançamentos:")
-            console.log(this.tipo_lancamento_dre)
 
             // Garante que os dados estão disponíveis antes de configurar o Tabulator
             if (!this.tipo_lancamento_dre || this.tipo_lancamento_dre.length === 0) {
