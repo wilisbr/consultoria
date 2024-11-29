@@ -143,7 +143,7 @@
         },
         methods: {
             async fetch_DREs(id) {
-            await axios.get(`http://localhost:8000/api/dre_mensal/?empresa__id=${id}`)
+            await axios.get(`${this.apiUrl}/dre_mensal/?empresa__id=${id}`)
                 .then(response => {
                 this.DREs = response.data;
                 })
@@ -180,7 +180,7 @@
                 });
             },
             async fetch_tipo_lancamento(){
-                await axios.get(`http://localhost:8000/api/tipo_lancamento_dre`)
+                await axios.get(`${this.apiUrl}/tipo_lancamento_dre`)
                 .then(response => {
                 this.tipo_lancamento_dre = response.data;
                 this.select_tipo_lancamento=response.data.reduce((acc, item) => {
