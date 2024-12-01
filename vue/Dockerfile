@@ -4,6 +4,10 @@ FROM node:16 AS build-stage
 # Defina o diretório de trabalho
 WORKDIR /app
 
+# Repassando ao container a variável declarada no docker-compose
+ARG VUE_APP_DASHBOARD_URL
+ENV VUE_APP_DASHBOARD_URL=$VUE_APP_DASHBOARD_URL
+
 # Copie o package.json e o package-lock.json para instalar as dependências
 COPY package*.json ./
 

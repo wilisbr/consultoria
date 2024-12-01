@@ -1,21 +1,13 @@
 <template>
     <div>
         <h2> Análise Anual </h2>
-        {{ this.DREs }}
-        {{ this.anosUnicos }}
-        {{ this.lancamentos }}
-        <select v-model="ano">
-        <option disabled value="">Ano</option>
-        <option v-for="ano in this.anosUnicos" :key="ano" :value="ano">
-            {{ ano }}
-        </option>
-        </select>
-        <div>
+        <div v-if="dashboard_URL">
+            {{ dashboard_URL }}
             <iframe
-            src="http://localhost:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?id=1"
-            width="100%"
-            height="600"
-            frameborder="0"
+                :src="dashboard_URL"
+                width="100%"
+                height="600"
+                frameborder="0"
             ></iframe>
         </div>
     </div>
@@ -28,35 +20,36 @@
         data() {
             return {
                 ano: null,
+                id_empresa: null,
                 DREs: [],
-                lancamentos: []
+                lancamentos: [],
+                dashboard_URL: null,
             }
         },
         async mounted() {
             if (this.$route.params.id){
+                this.id_empresa=this.$route.params.id
                 this.fetch_DREs(this.$route.params.id);
+                this.atualiza_dashboard();
+                console.log(this.dashboard_URL)
             }
+            
         },
         computed: {
-            anosUnicos() {
-                // Extrai os anos únicos do array DREs
-                return [...new Set(this.DREs.map(dre => dre.ano))].sort();
-            }
         },    
         watch: {
             '$route.params.id'(newId) {
                 this.fetch_DREs(newId);
-            },
-            ano(newAno) {
-                const filteredDREIds = this.DREs
-                .filter(dre => dre.ano === parseInt(newAno)) // Filtra pelo ano
-                .map(dre => dre.id); // Extrai apenas os IDs
-                this.fetch_lancamentos(filteredDREIds)
-            }
+                this.id_empresa=newId;
+                this.atualiza_dashboard();
+           },
         },
         methods:{
+            atualiza_dashboard(){
+                this.dashboard_URL=process.env.VUE_APP_DASHBOARD_URL+"empresa="+this.id_empresa+"&"+"ano=2024#hide_parameters=empresa";
+            },
             async fetch_DREs(id) {
-            await axios.get(`${this.apiUrl}/dre_mensal/?empresa__id=${id}`)
+                await axios.get(`${this.apiUrl}/dre_mensal/?empresa__id=${id}`)
                 .then(response => {
                 this.DREs = response.data;
                 })
