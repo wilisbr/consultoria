@@ -5,9 +5,6 @@ services:
     build:
       context: ./vue # Caminho para o diretório Vue
       dockerfile: Dockerfile # Se o Dockerfile estiver no diretório correto
-      #args:
-        #VUE_APP_DASHBOARD_URL: http://docker1.vps.webdock.cloud:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
-        #VUE_APP_DASHBOARD_URL: http://localhost:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
       args:
           VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
     container_name: vue_app
