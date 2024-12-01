@@ -5,10 +5,11 @@ services:
     build:
       context: ./vue # Caminho para o diretório Vue
       dockerfile: Dockerfile # Se o Dockerfile estiver no diretório correto
+      #args:
+        #VUE_APP_DASHBOARD_URL: http://docker1.vps.webdock.cloud:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
+        #VUE_APP_DASHBOARD_URL: http://localhost:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
       args:
-        VUE_APP_DASHBOARD_URL: http://localhost:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
-        #VUE_APP_DASHBOARD_URL: /metabase/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?
-
+          VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
     container_name: vue_app
     ports:
       - "80:80"  # Exponha o Nginx na porta 8080
@@ -17,6 +18,10 @@ services:
     depends_on:
       - django
       - metabase
+    env_file:
+      - .env # Diretiva para carregar variáveis do arquivo .env
+
+
   django:
     build:
       context: .
