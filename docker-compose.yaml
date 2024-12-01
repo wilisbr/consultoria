@@ -74,6 +74,8 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
     networks:
       - app_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistência de dados do PostgreSQL
 
 networks:
   app_network:
@@ -83,4 +85,6 @@ volumes:
   staticfiles:  # Declaração do volume nomeado "staticfiles"
   mysql_data:
   db_data:
+  postgres_data:
+  
 #  superset_home:

@@ -10,6 +10,14 @@
             {{ ano }}
         </option>
         </select>
+        <div>
+            <iframe
+            src="http://localhost:3000/public/dashboard/3127c765-adab-4a38-aa03-cc850e8fc929?id=1"
+            width="100%"
+            height="600"
+            frameborder="0"
+            ></iframe>
+        </div>
     </div>
 </template>
 <script>
