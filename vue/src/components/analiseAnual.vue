@@ -1,8 +1,6 @@
 <template>
     <div>
-        <h2> Análise Anual </h2>
         <div v-if="dashboard_URL">
-            {{ dashboard_URL }}
             <iframe
                 :src="dashboard_URL"
                 width="100%"
@@ -46,7 +44,7 @@
         },
         methods:{
             atualiza_dashboard(){
-                this.dashboard_URL=process.env.VUE_APP_DASHBOARD_URL+"empresa="+this.id_empresa+"&"+"ano=2024#hide_parameters=empresa";
+                this.dashboard_URL=process.env.VUE_APP_DASHBOARD_URL+"empresa="+this.id_empresa+"&"+"ano=2024#hide_parameters=empresa,natureza_custos_fixos,natureza_receita,natureza_cv,natureza_desp_finan_emp,natureza_invest";
             },
             async fetch_DREs(id) {
                 await axios.get(`${this.apiUrl}/dre_mensal/?empresa__id=${id}`)
