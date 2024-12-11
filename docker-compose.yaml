@@ -9,7 +9,7 @@ services:
           VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
     container_name: vue_app
     ports:
-      - "80:80"  # Exponha o Nginx na porta 8080
+      - "81:80"  # Exponha o Nginx na porta 8080
     networks:
       - app_network  # Especifica a rede para o Vue
     depends_on:
@@ -26,7 +26,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - .:/app
       - staticfiles:/app/staticfiles  # Verifique se você tem esse volume
