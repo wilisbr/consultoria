@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  vue_app:
+    build:
+      context: ./vue # Caminho para o diretório Vue
+      dockerfile: Dockerfile # Se o Dockerfile estiver no diretório correto
+      args:
+          VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
+    container_name: vue_app
+    ports:
+      - "81:80"  # Exponha o Nginx na porta 8080
+    networks:
+      - app_network  # Especifica a rede para o Vue
+    depends_on:
+      - django
+      - metabase
+    env_file:
+      - .env # Diretiva para carregar variáveis do arquivo .env
+
+
+  django:
+    build:
+      context: .
+    container_name: django_app
+    env_file:
+      - .env
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+      - staticfiles:/app/staticfiles  # Verifique se você tem esse volume
+    depends_on:
+      - mysql  # Garante que o Django inicie após o MySQL
+    networks:
+      - app_network  # Especifica a rede para o Django
+
+  mysql:
+    image: mysql:8.0  # Agora usando a versão 8.0 do MySQL
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Defina a senha do usuário root
+      MYSQL_DATABASE: defaultdb  # Nome do banco de dados para o Django
+      MYSQL_USER: avnadmin  # Nome do usuário
+      MYSQL_PASSWORD: AVNS_s_YJIYpw7l_iSnL3raN  # Senha do usuário
+    ports:
+      - "3306:3306"  # Expõe a porta do MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql  # Persistência dos dados do MySQL
+    networks:
+      - app_network  # Especifica a rede para o MySQL
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    hostname: metabase
+    volumes:
+      - /dev/urandom:/dev/random:ro
+    ports:
+      - 3000:3000
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabaseappdb
+      MB_DB_PORT: 5432
+      MB_DB_USER: metabase
+      MB_DB_PASS: mysecretpassword
+      MB_DB_HOST: postgres
+    networks:
+      - app_network
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: metabase
+      POSTGRES_DB: metabaseappdb
+      POSTGRES_PASSWORD: mysecretpassword
+    networks:
+      - app_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistência de dados do PostgreSQL
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  staticfiles:  # Declaração do volume nomeado "staticfiles"
+  mysql_data:
+  db_data:
+  postgres_data:
+  
+#  superset_home:
